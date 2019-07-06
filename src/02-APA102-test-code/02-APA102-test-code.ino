@@ -32,14 +32,10 @@ decode_results results;
 #define NUMPIXELS 50 // Number of LEDs in strip
 
 // Here's how to control the LEDs from any two pins:
-#define DATAPIN    3
 #define CLOCKPIN   2
+#define DATAPIN    3
 
 Adafruit_DotStar strip = Adafruit_DotStar(NUMPIXELS, DATAPIN, CLOCKPIN, DOTSTAR_BGR);
-
-//int LED_CLOCK_PIN = 2;
-//int LED_DATA_PIN_1 = 3;
-//int LED_DATA_PIN_2 = 4;
 
 void setup() {
   Serial.begin(115200);
@@ -63,9 +59,12 @@ void setup() {
 
   int p = 0;
   strip.setPixelColor(p++, 0xFF0000);  // R
-  strip.setPixelColor(p++, 0x00FF00);  // G
+  strip.setPixelColor(p++, 0x007700);  // G - half power
   strip.setPixelColor(p++, 0x0000FF);  // B
-  strip.setPixelColor(p++, 0xFFFFFF);  // W
+  strip.setPixelColor(p++, 0x777777);  // W - half power
+  strip.setPixelColor(p++, 0x333333);  // Gray
+  strip.setPixelColor(p++, 0x222222);  // Gray
+  strip.setPixelColor(p++, 0x111111);  // Gray
 }
 
 void loop() {

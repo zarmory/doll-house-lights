@@ -1,0 +1,67 @@
+/**
+ * Copyright 2019 Jim Sokoloff (jim.sokoloff@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * 
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *      
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// In Arduino 1.8.9 on MacOS, I had to remove the IRremoteTools.cpp file to compile
+
+// Include following library to access IR sensor
+#include <RobotIRremote.h>
+
+// Connect the IR Receiver to these three pins (in order, D9, D8, D7)
+int IR_GND_PIN = 9;    // GND for IR Receiver
+int IR_VCC_PIN = 8;    // Vcc for IR Receiver
+int IR_OUT_PIN = 7;    // Output of IR Receiver
+IRrecv receiver(IR_OUT_PIN); 
+decode_results results;     
+
+void setup() {
+  Serial.begin(115200);
+  Serial.println("Hello");
+  Serial.println("Use this test program to determine the hex codes for your remote");
+
+  pinMode(IR_VCC_PIN, OUTPUT);  // Provide power to the IR receiver
+  pinMode(IR_GND_PIN, OUTPUT);
+  digitalWrite(IR_VCC_PIN, LOW);
+  digitalWrite(IR_GND_PIN, HIGH);
+    
+  receiver.enableIRIn();    //  Enable receiver so that it would start processing infrared signals
+}
+
+void loop() {
+  if (receiver.decode(&results)) {            //  Decode the button code and put it in "results" variable
+    if (results.value != 0xffffffff) {
+      Serial.print(results.value, HEX);
+      if (results.value > 0xffffff) {
+        Serial.println(" (probably bad read)");
+      } else {
+        Serial.println(" (presumed good)");
+      }
+      if (results.value == 0xFFA05F) {          //  Key '1' is pressed
+        Serial.println("Key 1");
+      }
+      if (results.value == 0xFF20DF) {          //  Key '2' is pressed
+        Serial.println("Key 2");
+      }
+      if (results.value == 0xFF609F) {          //  Key '3' is pressed
+        Serial.println("Key 3");
+      }
+      if (results.value == 0xFFE01F) {          //  Key '4' is pressed
+         Serial.println("Key 4");
+      }
+    }
+    receiver.resume();
+  }
+}

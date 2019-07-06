@@ -32,12 +32,14 @@ decode_results results;
 #define NUMPIXELS 50 // Number of LEDs in strip
 
 // Here's how to control the LEDs from any two pins:
-#define CLOCKPIN    2
+#define CLOCKPIN1   2
 #define DATAPIN1    3
+
+#define CLOCKPIN2   2
 #define DATAPIN2    4
 
-Adafruit_DotStar strip1 = Adafruit_DotStar(NUMPIXELS, DATAPIN1, CLOCKPIN, DOTSTAR_BGR);
-Adafruit_DotStar strip2 = Adafruit_DotStar(NUMPIXELS, DATAPIN2, CLOCKPIN, DOTSTAR_BGR);
+Adafruit_DotStar strip1 = Adafruit_DotStar(NUMPIXELS, DATAPIN1, CLOCKPIN1, DOTSTAR_BGR);
+Adafruit_DotStar strip2 = Adafruit_DotStar(NUMPIXELS, DATAPIN2, CLOCKPIN2, DOTSTAR_BGR);
 
 
 void setup() {

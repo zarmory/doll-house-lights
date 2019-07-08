@@ -46,10 +46,10 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Hello");
   Serial.println("Use this test program to ensure your APA 102 lights are OK");
-  Serial.println("Should display a Red, then Green, then Blue, then White LED");
+  Serial.println("Should display a Red, then Green, then Blue, then White LEDs on one strand");
+  Serial.println("Should display a rainbox of LEDs on the second strand");
   Serial.println("If not, then change the DOTSTAR_XXX until it does");
   Serial.println("");
-  Serial.println("This program tests one strand at a time because of the library");
   
 
   pinMode(IR_VCC_PIN, OUTPUT);  // Provide power to the IR receiver

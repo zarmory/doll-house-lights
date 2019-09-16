@@ -23,7 +23,7 @@ unsigned long SmartIR::recv() {
     }
       
     // delay repeating to handle key debounce
-    if (millis() - m_press_ts > m_lpo) {
+    if (static_cast<int32_t>(millis() - m_press_ts) > m_lpo) {
       return m_last_val;
     }
 

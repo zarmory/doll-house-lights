@@ -7,11 +7,11 @@
 // ##### Config #####
 const byte IR_PIN = 4;
 
-
+// ##### Main #####
 SmartIR ir(IR_PIN);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   ir.start();
 }
 

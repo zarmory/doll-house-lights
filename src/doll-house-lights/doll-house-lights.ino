@@ -118,27 +118,27 @@ uint8_t room_index(keypad::KeyCode room_key_code) {
 }
 
 void handle_hsv_event(uint8_t room_index, keypad::KeyCode hsv_keycode) {
-  int16_t h = 0;
-  int8_t s = 0, v = 0;
+  int16_t h_diff = 0;
+  int8_t s_diff = 0, v_diff = 0;
   
   switch (hsv_keycode) {
     case keypad::HSVHueUp:
-      h = hsv_h_step;
+      h_diff = hsv_h_step;
       break;
     case keypad::HSVHueDown:
-      h = -hsv_h_step;
+      h_diff = -hsv_h_step;
       break;
     case keypad::HSVSatUp:
-      s = hsv_s_step;
+      s_diff = hsv_s_step;
       break;
     case keypad::HSVSatDown:
-      s = -hsv_s_step;
+      s_diff = -hsv_s_step;
       break;
     case keypad::HSVValUp:
-      v = hsv_v_step;
+      v_diff = hsv_v_step;
       break;
     case keypad::HSVValDown:
-      v = -hsv_v_step;
+      v_diff = -hsv_v_step;
       break;
     default:
       Serial.print("Unknown HSV key: ");
@@ -146,7 +146,7 @@ void handle_hsv_event(uint8_t room_index, keypad::KeyCode hsv_keycode) {
       return;
   }
 
-  lightman.adjust_strip_hsv(room_index, h, s, v);
-  Serial.println(String("Adjusting HSV for room ") + room_index + " h=" + h + " s=" + s + " v=" + v);
+  Serial.println(String("Adjusting HSV for room ") + room_index + " h_diff=" + h_diff + " s_diff=" + s_diff + " v_diff=" + v_diff);
+  lightman.adjust_strip_hsv(room_index, h_diff, s_diff, v_diff);
 
 }

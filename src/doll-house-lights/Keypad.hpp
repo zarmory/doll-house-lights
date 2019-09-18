@@ -2,6 +2,8 @@
 
 namespace keypad {
 
+typedef uint32_t KeyCode;
+
 enum Keys {
   Power = 0xFF02FD,
 
@@ -48,18 +50,18 @@ enum Keys {
   HSVValDown = 0xFF48B7,
 
   // Room selection
-  RoomBL = 0xFF20DF,
-  RoomBR = 0xFFA05F,
-  RoomML = 0xFF10EF,
-  RoomMR = 0xFF906F,
-  RoomTL = 0xFF30CF,
-  RoomTR = 0xFFB04F,
+  RoomBL   = 0xFF20DF,
+  RoomBR   = 0xFFA05F,
+  RoomML   = 0xFF10EF,
+  RoomMR   = 0xFF906F,
+  RoomTL   = 0xFF30CF,
+  RoomTR   = 0xFFB04F,
   RoomEave = 0xFF708F,
-  RoomAll = 0xFF609F,
+  RoomAll  = 0xFF609F,
 };
 
-bool isCopyPaste(unsigned long keycode) {
-  switch(keycode) {
+bool isCopyPaste(KeyCode keycode) {
+  switch (keycode) {
     case CopyColor:
     case PasteColor:
       return true;
@@ -70,8 +72,8 @@ bool isCopyPaste(unsigned long keycode) {
   }
 }
 
-bool isBrightness(unsigned long keycode) {
-  switch(keycode) {
+bool isBrightness(KeyCode keycode) {
+  switch (keycode) {
     case BrightnessUp:
     case BrightnessDown:
       return true;
@@ -82,8 +84,8 @@ bool isBrightness(unsigned long keycode) {
   }
 }
 
-bool isColor(unsigned long keycode) {
-  switch(keycode) {
+bool isColor(KeyCode keycode) {
+  switch (keycode) {
     case Color11:
     case Color12:
     case Color13:
@@ -112,8 +114,8 @@ bool isColor(unsigned long keycode) {
   }
 }
 
-bool isHSV(unsigned long keycode) {
-  switch(keycode) {
+bool isHSV(KeyCode keycode) {
+  switch (keycode) {
     case HSVHueUp:
     case HSVHueDown:
     case HSVSatUp:
@@ -128,8 +130,8 @@ bool isHSV(unsigned long keycode) {
   }
 }
 
-bool isRoom(unsigned long keycode) {
-  switch(keycode) {
+bool isRoom(KeyCode keycode) {
+  switch (keycode) {
     case RoomBL:
     case RoomBR:
     case RoomML:

@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "SmartIR.hpp"
 
 SmartIR::SmartIR(byte pin, unsigned int long_press_delay_ms) {
@@ -6,7 +7,7 @@ SmartIR::SmartIR(byte pin, unsigned int long_press_delay_ms) {
 }
 
 // This has to be run in setup stage, not in globals
-void SmartIR::start() {
+void SmartIR::initialize() {
     m_receiver->enableIRIn();
 }
 

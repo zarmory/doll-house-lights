@@ -4,11 +4,18 @@ namespace rainbow {
 
 class ColorHSV {
   public:
-    ColorHSV(uint16_t h, uint8_t s, uint8_t v) : h(h), s(s), v(v) {}
+    ColorHSV(uint16_t h = 0 , uint8_t s = 0, uint8_t v = 0) : h(h), s(s), v(v) {}
+
   public:
-    const uint16_t h;
-    const uint8_t s;
-    const uint8_t v;
+    uint16_t h;
+    uint8_t s;
+    uint8_t v;
+
+    void operator=(const ColorHSV &c) {
+      h = c.h;
+      s = c.s;
+      v = c.v;
+    }
 
     operator String() const {
       return String("ColorHSV(h=") + h + " s=" + s + " v=" + v + ")";

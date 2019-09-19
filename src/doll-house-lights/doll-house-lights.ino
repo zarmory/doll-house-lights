@@ -17,15 +17,15 @@ const uint8_t ir_pin = 4;
 const uint8_t clock_pin = 13;
 
 LedStrip led_strips[] = {
-  // # of pixels, data pin, clock pin
-  LedStrip(4, 5, clock_pin),
-  LedStrip(4, 6, clock_pin),
-  LedStrip(4, 7, clock_pin),
-  LedStrip(4, 8, clock_pin),
-  LedStrip(4, 9, clock_pin),
-  LedStrip(4, 10, clock_pin),
-  LedStrip(40, 11, clock_pin),
-  // LedStrip(4, 12, clock_pin), // spare channel
+  // id, # of pixels, data pin, clock pin
+  LedStrip(0, 4, 5, clock_pin),
+  LedStrip(1, 4, 6, clock_pin),
+  LedStrip(2, 4, 7, clock_pin),
+  LedStrip(3, 4, 8, clock_pin),
+  LedStrip(4, 4, 9, clock_pin),
+  LedStrip(5, 4, 10, clock_pin),
+  LedStrip(6, 40, 11, clock_pin),
+  // LedStrip(7, 4, 12, clock_pin), // spare channel
 };
 
 
@@ -165,73 +165,73 @@ void handle_power_event(bool lights_on) {
 }
 
 void handle_color_event(uint8_t room_index, keypad::KeyCode color_keycode) {
-  rainbow::ColorHSV *color;
+  rainbow::ColorHSV color;
   const auto max_hue = 65535;
   const auto max_sat = 255;
 
   switch (color_keycode) {
     case keypad::Color51:  // Red
-      color = new rainbow::ColorHSV(0, max_sat, 255);
+      color = rainbow::ColorHSV(0, max_sat, 255);
       break;
     case keypad::Color41:  // Orange-ish red
-      color = new rainbow::ColorHSV(1000, max_sat, 220);
+      color = rainbow::ColorHSV(1000, max_sat, 220);
       break;
     case keypad::Color31:  // Dark orange
-      color = new rainbow::ColorHSV(2000, max_sat, 190);
+      color = rainbow::ColorHSV(2000, max_sat, 190);
       break;
     case keypad::Color21:  // Light orange
-      color = new rainbow::ColorHSV(5000, max_sat, 160);
+      color = rainbow::ColorHSV(5000, max_sat, 160);
       break;
     case keypad::Color11:  // Yellow
-      color = new rainbow::ColorHSV(max_hue/6, max_sat, 110);
+      color = rainbow::ColorHSV(max_hue/6, max_sat, 110);
       break;
 
     case keypad::Color52:  // Green
-      color = new rainbow::ColorHSV(max_hue/3, max_sat, 150);
+      color = rainbow::ColorHSV(max_hue/3, max_sat, 150);
       break;
     case keypad::Color42:  // Light Green
-      color = new rainbow::ColorHSV(max_hue/6+9000, max_sat, 150);
+      color = rainbow::ColorHSV(max_hue/6+9000, max_sat, 150);
       break;
     case keypad::Color32:  // Bright green
-      color = new rainbow::ColorHSV(max_hue/6+7000, max_sat, 150);
+      color = rainbow::ColorHSV(max_hue/6+7000, max_sat, 150);
       break;
     case keypad::Color22:  // Yellow green
-      color = new rainbow::ColorHSV(max_hue/6+5000, max_sat, 150);
+      color = rainbow::ColorHSV(max_hue/6+5000, max_sat, 150);
       break;
     case keypad::Color12:  // Cold yellow
-      color = new rainbow::ColorHSV(max_hue/6+2500, max_sat, 150);
+      color = rainbow::ColorHSV(max_hue/6+2500, max_sat, 150);
       break;
 
     case keypad::Color53:  // Blue
-      color = new rainbow::ColorHSV(max_hue/3*2, max_sat, 255);
+      color = rainbow::ColorHSV(max_hue/3*2, max_sat, 255);
       break;
     case keypad::Color43:  // Light blue
-      color = new rainbow::ColorHSV(max_hue/3*2-2000, max_sat, 200);
+      color = rainbow::ColorHSV(max_hue/3*2-2000, max_sat, 200);
       break;
     case keypad::Color33:  // Sky blue
-      color = new rainbow::ColorHSV(max_hue/3*2-5000, max_sat, 140);
+      color = rainbow::ColorHSV(max_hue/3*2-5000, max_sat, 140);
       break;
     case keypad::Color23:  // Cyan
-      color = new rainbow::ColorHSV(max_hue/3*2-8000, max_sat, 120);
+      color = rainbow::ColorHSV(max_hue/3*2-8000, max_sat, 120);
       break;
     case keypad::Color13:  // Cold cyan
-      color = new rainbow::ColorHSV(max_hue/3*2-13000, max_sat, 100);
+      color = rainbow::ColorHSV(max_hue/3*2-13000, max_sat, 100);
       break;
 
     case keypad::Color54:  // White
-      color = new rainbow::ColorHSV(0, 0, 255);
+      color = rainbow::ColorHSV(0, 0, 255);
       break;
     case keypad::Color44:  // Pink
-      color = new rainbow::ColorHSV(max_hue/6*5+9000, max_sat, 250);
+      color = rainbow::ColorHSV(max_hue/6*5+9000, max_sat, 250);
       break;
     case keypad::Color34:  // Cold ping
-      color = new rainbow::ColorHSV(max_hue/6*5+5000, max_sat, 215);
+      color = rainbow::ColorHSV(max_hue/6*5+5000, max_sat, 215);
       break;
     case keypad::Color24:  // Lilac
-      color = new rainbow::ColorHSV(max_hue/6*5, max_sat, 150);
+      color = rainbow::ColorHSV(max_hue/6*5, max_sat, 150);
       break;
     case keypad::Color14:  // Light violet
-      color = new rainbow::ColorHSV(max_hue/6*5-5000, max_sat, 170);
+      color = rainbow::ColorHSV(max_hue/6*5-5000, max_sat, 170);
       break;
 
     default:
@@ -240,5 +240,4 @@ void handle_color_event(uint8_t room_index, keypad::KeyCode color_keycode) {
   }
 
   lightman.set_strip_color(room_index, color);
-  delete color;
 }

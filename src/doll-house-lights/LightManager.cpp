@@ -16,7 +16,7 @@ void LightManager::adjust_strip_hsv(uint8_t strip_index, UpDown h_dir, UpDown s_
   m_strips[strip_index].adjust_hsv(h_dir, s_dir, v_dir);
 }
 
-void LightManager::set_strip_color(uint8_t strip_index, rainbow::ColorHSV *color){
+void LightManager::set_strip_color(uint8_t strip_index, rainbow::ColorHSV &color){
     m_strips[strip_index].set_color(color);
 }
 

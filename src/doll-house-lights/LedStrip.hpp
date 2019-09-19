@@ -28,7 +28,7 @@ enum class UpDown : int8_t {
 
 class LedStrip {
   public:
-    LedStrip(uint8_t n_pixels, uint8_t data_pin, uint8_t clock_pin) {
+    LedStrip(const uint8_t id, uint8_t n_pixels, uint8_t data_pin, uint8_t clock_pin) : id(id) {
       m_dotstar = new Adafruit_DotStar(n_pixels, data_pin, clock_pin, DOTSTAR_BGR);
     }
 
@@ -48,32 +48,28 @@ class LedStrip {
     void adjust_hsv(UpDown h_dir, UpDown s_dir, UpDown v_dir) {
       int8_t s_diff, v_diff;
 
-      m_h += static_cast<int8_t>(h_dir) * h_step; // Let it roll over around the HSV wheel
+      m_c.h += static_cast<int8_t>(h_dir) * h_step; // Let it roll over around the HSV wheel
 
       // Making Saturation to change slow around high values and fast around low values.
       // Similar approach with Value, but the other way around.
       // This improves user experience since perception wise, color changes are not uniform
       // accross the range.
-      s_diff = static_cast<int8_t>(s_dir) * max(s_rel_step * (HSV_MAX_S - m_s), s_min_step);
-      v_diff = static_cast<int8_t>(v_dir) * max(v_rel_step * m_v, v_min_step);
-
-      Serial.println(String("m_v=") + m_v + " v_diff=" + v_diff);
-      Serial.println(String("m_s=") + m_s + " s_diff=" + s_diff);
+      s_diff = static_cast<int8_t>(s_dir) * max(s_rel_step * (HSV_MAX_S - m_c.s), s_min_step);
+      v_diff = static_cast<int8_t>(v_dir) * max(v_rel_step * m_c.v, v_min_step);
 
       // Clamp S/V values to 0-255 range.
       // FIXME: Looks inefficient - probably some bit magic will do better?
-      m_s = (s_diff > 0) ? min(m_s + s_diff, HSV_MAX_S) : max(m_s + s_diff, 0);
-      m_v = (v_diff > 0) ? min(m_v + v_diff, HSV_MAX_V) : max(m_v + v_diff, 0);
+      m_c.s = (s_diff > 0) ? min(m_c.s + s_diff, HSV_MAX_S) : max(m_c.s + s_diff, 0);
+      m_c.v = (v_diff > 0) ? min(m_c.v + v_diff, HSV_MAX_V) : max(m_c.v + v_diff, 0);
 
       // FIXME: For smoother change effect consider applying diffs in several iterations
       // i.e. if diff is 10, call fill_color() 10 times each time with diff of 1.
       this->fill_color();
     }
 
-    void set_color(rainbow::ColorHSV *color) {
-      m_h = color->h;
-      m_s = color->s;
-      m_v = color->v;
+    void set_color(rainbow::ColorHSV &color) {
+      m_c = color;
+      Serial.println(String("color=") + String(color) + " m_c=" + String(m_c));
       this->fill_color();
     }
 
@@ -86,17 +82,16 @@ class LedStrip {
       this->fill_color();
     }
 
+    const uint8_t id; // For debug messages
+
   private:
     Adafruit_DotStar *m_dotstar;
 
-    // lights off
-    uint16_t m_h = 0;
-    uint8_t m_s = 0;
-    uint8_t m_v = 0;
+    rainbow::ColorHSV m_c = rainbow::ColorHSV(0, 0, 0); // no light
 
     void fill_color() {
-      Serial.println(String("Setting color h=") + m_h + " s=" + m_s + " v=" + m_v);
-      m_dotstar->fill(m_dotstar->ColorHSV(m_h, m_s, m_v), 0, m_dotstar->numPixels());
+      Serial.println(String("Strip ") + id + " setting color to " + String(m_c));
+      m_dotstar->fill(m_dotstar->ColorHSV(m_c.h, m_c.s, m_c.v), 0, m_dotstar->numPixels());
       m_dotstar->show();
     }
 };

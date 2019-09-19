@@ -15,7 +15,7 @@ class LightManager {
     void initialize();
     
     void adjust_strip_hsv(uint8_t strip_index, UpDown h_dir, UpDown s_dir, UpDown v_dir);
-    void set_strip_color(uint8_t strip_index, rainbow::ColorHSV *color);
+    void set_strip_color(uint8_t strip_index, rainbow::ColorHSV &color);
 
     // Turn all strip On/Off to their last saved values
     void on();

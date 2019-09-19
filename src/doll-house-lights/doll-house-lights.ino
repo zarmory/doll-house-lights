@@ -34,11 +34,11 @@ SmartIR ir(ir_pin);
 lightmanager::LightManager lightman(led_strips, sizeof(led_strips)/sizeof(LedStrip));
 
 
-uint8_t room_index(keypad::KeyCode room_key_code);
+uint8_t get_room_index(keypad::KeyCode room_keycode);
 void handle_hsv_event(uint8_t room_index, keypad::KeyCode hsv_keycode);
 void handle_power_event(bool lights_on);
 void handle_color_event(uint8_t room_index, keypad::KeyCode color_keycode);
-
+void handle_room_onoff_event(uint8_t room_index, keypad::KeyCode on_off_keycode);
 
 void setup() {
   Serial.begin(115200);
@@ -59,8 +59,9 @@ void loop() {
   
     Serial.print(String("Received key ") + String(keycode, HEX) + ". ");
 
-    if (keypad::isBrightness(keycode)) {
-      Serial.println("It's a brightness key");
+    if (keypad::isRoomOnOff(keycode)) {
+      Serial.println("It's a room on/off key");
+      handle_room_onoff_event(state.current_room_index, keycode);
     
     } else if (keypad::isColor(keycode)) {
       Serial.println("It's a color key");
@@ -72,9 +73,9 @@ void loop() {
       handle_hsv_event(state.current_room_index, keycode);
       state.lights_on = true;
     
-    } else if (keypad::isRoom(keycode)) {
+    } else if (keypad::isRoomSelection(keycode)) {
       Serial.println("It's a Room selection key");
-      state.current_room_index = room_index(keycode);
+      state.current_room_index = get_room_index(keycode);
     
     } else if (keypad::isCopyPaste(keycode)) {
       Serial.println("It's a copy/paste key");
@@ -94,8 +95,8 @@ void loop() {
   }
 }
 
-uint8_t room_index(keypad::KeyCode room_key_code) {
-  switch (room_key_code) {
+uint8_t get_room_index(keypad::KeyCode room_keycode) {
+  switch (room_keycode) {
     case keypad::RoomBL:
       return 0;
       break;
@@ -118,7 +119,7 @@ uint8_t room_index(keypad::KeyCode room_key_code) {
       return 6;
       break;
     default:
-      return 0;  // FIXME: Suboptimal - needs proper error handling.
+      return 6;
       break;
   }
 }
@@ -240,4 +241,17 @@ void handle_color_event(uint8_t room_index, keypad::KeyCode color_keycode) {
   }
 
   lightman.set_strip_color(room_index, color);
+}
+
+void handle_room_onoff_event(uint8_t room_index, keypad::KeyCode on_off_keycode) {
+  switch (on_off_keycode) {
+    case keypad::RoomOn:
+      lightman.strip_on(room_index);
+      break;
+    case keypad::RoomOff:
+      lightman.strip_off(room_index);
+      break;
+    default:
+      return;
+  }
 }

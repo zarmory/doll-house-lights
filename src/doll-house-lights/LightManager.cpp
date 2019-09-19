@@ -32,4 +32,12 @@ void LightManager::off() {
   }
 }
 
+void LightManager::strip_on(uint8_t strip_index) {
+  m_strips[strip_index].on();
+}
+
+void LightManager::strip_off(uint8_t strip_index) {
+  m_strips[strip_index].off();
+}
+
 } // end of namespace

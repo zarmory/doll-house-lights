@@ -10,8 +10,8 @@ enum Keys {
   CopyColor  = 0xFFE817,
   PasteColor = 0xFFC837,
 
-  BrightnessUp = 0xFF3AC5,
-  BrightnessDown = 0XFFBA45,
+  RoomOn = 0xFF3AC5,
+  RoomOff = 0XFFBA45,
 
   // Colors
   // Numbers mean x/y button index from bottom left side
@@ -72,10 +72,10 @@ bool isCopyPaste(KeyCode keycode) {
   }
 }
 
-bool isBrightness(KeyCode keycode) {
+bool isRoomOnOff(KeyCode keycode) {
   switch (keycode) {
-    case BrightnessUp:
-    case BrightnessDown:
+    case RoomOn:
+    case RoomOff:
       return true;
       break;
     default:
@@ -130,7 +130,7 @@ bool isHSV(KeyCode keycode) {
   }
 }
 
-bool isRoom(KeyCode keycode) {
+bool isRoomSelection(KeyCode keycode) {
   switch (keycode) {
     case RoomBL:
     case RoomBR:

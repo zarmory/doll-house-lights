@@ -89,10 +89,10 @@ class LedStrip {
   private:
     Adafruit_DotStar *m_dotstar;
 
-    // white
+    // lights off
     uint16_t m_h = 0;
     uint8_t m_s = 0;
-    uint8_t m_v = 255;
+    uint8_t m_v = 0;
 
     void fill_color() {
       Serial.println(String("Setting color h=") + m_h + " s=" + m_s + " v=" + m_v);

@@ -64,11 +64,13 @@ void loop() {
     
     } else if (keypad::isColor(keycode)) {
       Serial.println("It's a color key");
+      state.lights_on = true;
       handle_color_event(state.current_room_index, keycode);
 
     } else if (keypad::isHSV(keycode)) {
       Serial.println("It's a HSV key");
       handle_hsv_event(state.current_room_index, keycode);
+      state.lights_on = true;
     
     } else if (keypad::isRoom(keycode)) {
       Serial.println("It's a Room selection key");

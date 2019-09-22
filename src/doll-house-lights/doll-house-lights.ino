@@ -61,7 +61,7 @@ void loop() {
 
     if (keypad::isRoomOnOff(keycode)) {
       Serial.println("It's a room on/off key");
-      handle_room_onoff_event(state.current_room_index, keycode);
+      handle_room_onoff_event(state.current_room_index, keycode, state.lights_on);
     
     } else if (keypad::isColor(keycode)) {
       Serial.println("It's a color key");
@@ -243,10 +243,11 @@ void handle_color_event(uint8_t room_index, keypad::KeyCode color_keycode) {
   lightman.set_strip_color(room_index, color);
 }
 
-void handle_room_onoff_event(uint8_t room_index, keypad::KeyCode on_off_keycode) {
+void handle_room_onoff_event(uint8_t room_index, keypad::KeyCode on_off_keycode, bool &lights_on) {
   switch (on_off_keycode) {
     case keypad::RoomOn:
       lightman.strip_on(room_index);
+      lights_on = true;
       break;
     case keypad::RoomOff:
       lightman.strip_off(room_index);

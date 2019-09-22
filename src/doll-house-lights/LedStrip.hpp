@@ -28,7 +28,7 @@ enum class UpDown : int8_t {
 
 class LedStrip {
   public:
-    LedStrip(const uint8_t id, uint8_t n_pixels, uint8_t data_pin, uint8_t clock_pin) : id(id) {
+    LedStrip(const uint8_t id, const uint8_t n_pixels, const uint8_t data_pin, const uint8_t clock_pin) : id(id) {
       m_dotstar = new Adafruit_DotStar(n_pixels, data_pin, clock_pin, DOTSTAR_BGR);
     }
 
@@ -45,7 +45,7 @@ class LedStrip {
     /// @param h_diff Hue value delta
     /// @param s_up_down Saturation value - either +1 or -1
     /// @param v_up_down Value value - either +1 or -1
-    void adjust_hsv(UpDown h_dir, UpDown s_dir, UpDown v_dir) {
+    void adjust_hsv(const UpDown h_dir, const UpDown s_dir, const UpDown v_dir) {
       int8_t s_diff, v_diff;
 
       m_c.h += static_cast<int8_t>(h_dir) * h_step; // Let it roll over around the HSV wheel
@@ -69,7 +69,7 @@ class LedStrip {
       m_is_on = true;
     }
 
-    void set_color(rainbow::ColorHSV &color) {
+    void set_color(const rainbow::ColorHSV &color) {
       m_c = color;
       this->fill_color();
       m_is_on = true;
@@ -90,7 +90,7 @@ class LedStrip {
       return m_is_on;
     }
 
-    rainbow::ColorHSV get_color() {
+    const rainbow::ColorHSV get_color() {
       return m_c;
     }
 

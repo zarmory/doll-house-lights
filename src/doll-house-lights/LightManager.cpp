@@ -6,7 +6,7 @@ using ledstrip::LedStrip;
 using ledstrip::UpDown;
 
 
-LightManager::LightManager(ledstrip::LedStrip strips[], uint8_t size) : m_strips(strips), m_size(size) {
+LightManager::LightManager(ledstrip::LedStrip strips[], const uint8_t size) : m_strips(strips), m_size(size) {
   m_strip_state = new bool[m_size];
   for (auto i = 0; i < m_size; i++) {
     m_strip_state[i] = m_strips[i].is_on();
@@ -20,7 +20,7 @@ void LightManager::initialize() {
   }
 }
 
-void LightManager::adjust_strip_hsv(StripIndex si, UpDown h_dir, UpDown s_dir, UpDown v_dir) {
+void LightManager::adjust_strip_hsv(const StripIndex si, const UpDown h_dir, const UpDown s_dir, const UpDown v_dir) {
   if (!this->is_on()) {
     this->reset_state();
   }
@@ -31,7 +31,7 @@ void LightManager::adjust_strip_hsv(StripIndex si, UpDown h_dir, UpDown s_dir, U
   }
 }
 
-void LightManager::set_strip_color(StripIndex si, rainbow::ColorHSV &color){
+void LightManager::set_strip_color(const StripIndex si, const rainbow::ColorHSV &color){
   if (!this->is_on()) {
     this->reset_state();
   }
@@ -63,7 +63,7 @@ bool LightManager::is_on() {
   return res;
 }
 
-void LightManager::strip_on(StripIndex si) {
+void LightManager::strip_on(const StripIndex si) {
   if (!this->is_on()) {
     this->reset_state();
   }
@@ -73,14 +73,14 @@ void LightManager::strip_on(StripIndex si) {
   }
 }
 
-void LightManager::strip_off(StripIndex si) {
+void LightManager::strip_off(const StripIndex si) {
   for (auto i = (si.is_all() ? 0 : si.index); i <= (si.is_all() ? (m_size - 1) : si.index); i++) {
     m_strips[i].off();
     m_strip_state[i] = false;
   }
 }
 
-bool LightManager::is_strip_on(StripIndex si) {
+bool LightManager::is_strip_on(const StripIndex si) {
   if (si.is_all()) {
     return this->is_on();
   } else {
@@ -88,7 +88,7 @@ bool LightManager::is_strip_on(StripIndex si) {
   }
 }
 
-rainbow::ColorHSV LightManager::get_strip_color(StripIndex si) {
+rainbow::ColorHSV LightManager::get_strip_color(const StripIndex si) {
   if (si.is_all()) {
     // get_strip_color for all strips does not really makes sense logic-wise
     // but can happen if a user wishes so.

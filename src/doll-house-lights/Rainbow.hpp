@@ -17,7 +17,7 @@ class ColorHSV {
       v = c.v;
     }
 
-    String to_String() {
+    String to_String() const {
       return String("ColorHSV(h=") + h + " s=" + s + " v=" + v + ")";
     }
 

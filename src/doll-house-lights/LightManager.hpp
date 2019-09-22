@@ -13,11 +13,11 @@ class StripIndex {
       AllStrips = -1,
     };
 
-    int index;
-    StripIndex(int i = 0) : index(i) {}
-    bool is_all() { return (index == AllStrips); }
+    int8_t index;
+    StripIndex(int8_t i = 0) : index(i) {}
+    bool is_all() const { return (index == AllStrips); }
 
-    operator int() const { return index; }
+    operator int8_t() const { return index; }
 };
 
 class LightManager {
@@ -27,8 +27,8 @@ class LightManager {
   public:
     void initialize();
     
-    void adjust_strip_hsv(StripIndex si, UpDown h_dir, UpDown s_dir, UpDown v_dir);
-    void set_strip_color(StripIndex si, rainbow::ColorHSV &color);
+    void adjust_strip_hsv(const StripIndex si, const UpDown h_dir, const UpDown s_dir, const UpDown v_dir);
+    void set_strip_color(const StripIndex si, const rainbow::ColorHSV &color);
 
     // Turn all strips Off / On to their last saved color
     // "all" means all those that were powered on before
@@ -38,16 +38,16 @@ class LightManager {
     bool is_on();
 
     // Turn a strip Off / On to their last saved color
-    void strip_on(StripIndex si);
-    void strip_off(StripIndex si);
+    void strip_on(const StripIndex si);
+    void strip_off(const StripIndex si);
 
-    bool is_strip_on(StripIndex si);
+    bool is_strip_on(const StripIndex si);
 
-    rainbow::ColorHSV get_strip_color(StripIndex si);
+    rainbow::ColorHSV get_strip_color(const StripIndex si);
 
   private:
     ledstrip::LedStrip *m_strips; 
-    uint8_t m_size;
+    const uint8_t m_size;
     bool *m_strip_state;
     bool m_is_on = false;
 

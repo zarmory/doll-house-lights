@@ -36,9 +36,9 @@ lightmanager::LightManager lightman(led_strips, sizeof(led_strips)/sizeof(LedStr
 
 uint8_t get_room_index(keypad::KeyCode room_keycode);
 void handle_hsv_event(uint8_t room_index, keypad::KeyCode hsv_keycode);
-void handle_power_event(bool lights_on);
+void handle_power_event(bool &lights_on);
 void handle_color_event(uint8_t room_index, keypad::KeyCode color_keycode);
-void handle_room_onoff_event(uint8_t room_index, keypad::KeyCode on_off_keycode);
+void handle_room_onoff_event(uint8_t room_index, keypad::KeyCode on_off_keycode, bool &lights_on);
 
 void setup() {
   Serial.begin(115200);
@@ -84,7 +84,6 @@ void loop() {
       switch (keycode) {
         case keypad::Power:
           Serial.println("It's a power key");
-          state.lights_on = !state.lights_on;
           handle_power_event(state.lights_on);
           break;
         default:
@@ -160,7 +159,8 @@ void handle_hsv_event(uint8_t room_index, keypad::KeyCode hsv_keycode) {
 
 }
 
-void handle_power_event(bool lights_on) {
+void handle_power_event(bool &lights_on) {
+  lights_on = !lights_on;
   Serial.println(String("Lights ") + (lights_on ? "on!" : "off!"));
   lights_on ? lightman.on() : lightman.off();
 }

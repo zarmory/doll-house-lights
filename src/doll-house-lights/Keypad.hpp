@@ -7,8 +7,8 @@ typedef uint32_t KeyCode;
 enum Keys {
   Power = 0xFF02FD,
 
-  CopyColor  = 0xFFE817,
-  PasteColor = 0xFFC837,
+  CopyColor  = 0xFFD02F,
+  PasteColor = 0xFFE01F,
 
   RoomOn = 0xFF3AC5,
   RoomOff = 0XFFBA45,

@@ -39,6 +39,7 @@ void handle_hsv_event(uint8_t room_index, keypad::KeyCode hsv_keycode);
 void handle_power_event(bool &lights_on);
 void handle_color_event(uint8_t room_index, keypad::KeyCode color_keycode);
 void handle_room_onoff_event(uint8_t room_index, keypad::KeyCode on_off_keycode, bool &lights_on);
+void handle_copy_paste_event(uint8_t room_index, keypad::KeyCode cp_keycode, rainbow::ColorHSV &clip_color);
 
 void setup() {
   Serial.begin(115200);
@@ -51,6 +52,7 @@ void loop() {
   static struct {
     uint8_t current_room_index = 0;
     bool lights_on = false;
+    rainbow::ColorHSV clip_color;
   } state;
   
   keypad::KeyCode keycode = 0;
@@ -79,6 +81,7 @@ void loop() {
     
     } else if (keypad::isCopyPaste(keycode)) {
       Serial.println("It's a copy/paste key");
+      handle_copy_paste_event(state.current_room_index, keycode, state.clip_color);
     
     } else {
       switch (keycode) {
@@ -254,5 +257,24 @@ void handle_room_onoff_event(uint8_t room_index, keypad::KeyCode on_off_keycode,
       break;
     default:
       return;
+  }
+}
+
+void handle_copy_paste_event(uint8_t room_index, keypad::KeyCode cp_keycode, rainbow::ColorHSV &clip_color) {
+   switch (cp_keycode) {
+    case keypad::CopyColor:
+      if (!lightman.is_strip_on(room_index)) {
+        Serial.println("the strip is not on");
+        return;
+      }
+      clip_color = lightman.get_strip_color(room_index);
+      Serial.println(String("Copied color: ") + clip_color.to_String());
+      break;
+    case keypad::PasteColor:
+      lightman.set_strip_color(room_index, clip_color);
+      Serial.println(String("Pasted color: ") + clip_color.to_String());
+    default:
+      return;
+      break;
   }
 }

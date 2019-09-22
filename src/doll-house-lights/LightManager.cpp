@@ -40,4 +40,13 @@ void LightManager::strip_off(uint8_t strip_index) {
   m_strips[strip_index].off();
 }
 
+bool LightManager::is_strip_on(uint8_t strip_index) {
+  return m_strips[strip_index].is_on();
+}
+
+rainbow::ColorHSV LightManager::get_strip_color(uint8_t strip_index) {
+  return m_strips[strip_index].get_color();
+}
+
+
 } // end of namespace

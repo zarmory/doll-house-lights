@@ -17,8 +17,12 @@ class ColorHSV {
       v = c.v;
     }
 
-    operator String() const {
+    String to_String() {
       return String("ColorHSV(h=") + h + " s=" + s + " v=" + v + ")";
+    }
+
+    operator bool() const {
+      return (h && s && v);
     }
 };
   

@@ -25,6 +25,10 @@ class LightManager {
     void strip_on(uint8_t strip_index);
     void strip_off(uint8_t strip_index);
 
+    bool is_strip_on(uint8_t strip_index);
+
+    rainbow::ColorHSV get_strip_color(uint8_t strip_index);
+
   private:
     ledstrip::LedStrip *m_strips; 
     uint8_t m_size;

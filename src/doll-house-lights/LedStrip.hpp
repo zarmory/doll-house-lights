@@ -65,21 +65,33 @@ class LedStrip {
       // FIXME: For smoother change effect consider applying diffs in several iterations
       // i.e. if diff is 10, call fill_color() 10 times each time with diff of 1.
       this->fill_color();
+
+      m_is_on = true;
     }
 
     void set_color(rainbow::ColorHSV &color) {
       m_c = color;
-      Serial.println(String("color=") + String(color) + " m_c=" + String(m_c));
       this->fill_color();
+      m_is_on = true;
     }
 
     void off() {
       m_dotstar->fill(0, 0, m_dotstar->numPixels());
       m_dotstar->show();
+      m_is_on = false;
     }
 
     void on() {
       this->fill_color();
+      m_is_on = true;
+    }
+
+    bool is_on() {
+      return m_is_on;
+    }
+
+    rainbow::ColorHSV get_color() {
+      return m_c;
     }
 
     const uint8_t id; // For debug messages
@@ -87,10 +99,11 @@ class LedStrip {
   private:
     Adafruit_DotStar *m_dotstar;
 
+    bool m_is_on = false;
     rainbow::ColorHSV m_c = rainbow::ColorHSV(0, 0, 0); // no light
 
     void fill_color() {
-      Serial.println(String("Strip ") + id + " setting color to " + String(m_c));
+      Serial.println(String("Strip ") + id + " setting color to " + m_c.to_String());
       m_dotstar->fill(m_dotstar->ColorHSV(m_c.h, m_c.s, m_c.v), 0, m_dotstar->numPixels());
       m_dotstar->show();
     }

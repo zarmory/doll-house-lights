@@ -7,6 +7,19 @@ namespace lightmanager {
 
 using ledstrip::UpDown;
 
+class StripIndex {
+  public:
+    enum {
+      AllStrips = -1,
+    };
+
+    int index;
+    StripIndex(int i = 0) : index(i) {}
+    bool is_all() { return (index == AllStrips); }
+
+    operator int() const { return index; }
+};
+
 class LightManager {
   public:
     LightManager(ledstrip::LedStrip strips[], uint8_t size);
@@ -14,8 +27,8 @@ class LightManager {
   public:
     void initialize();
     
-    void adjust_strip_hsv(uint8_t strip_index, UpDown h_dir, UpDown s_dir, UpDown v_dir);
-    void set_strip_color(uint8_t strip_index, rainbow::ColorHSV &color);
+    void adjust_strip_hsv(StripIndex si, UpDown h_dir, UpDown s_dir, UpDown v_dir);
+    void set_strip_color(StripIndex si, rainbow::ColorHSV &color);
 
     // Turn all strips Off / On to their last saved color
     // "all" means all those that were powered on before
@@ -25,12 +38,12 @@ class LightManager {
     bool is_on();
 
     // Turn a strip Off / On to their last saved color
-    void strip_on(uint8_t strip_index);
-    void strip_off(uint8_t strip_index);
+    void strip_on(StripIndex si);
+    void strip_off(StripIndex si);
 
-    bool is_strip_on(uint8_t strip_index);
+    bool is_strip_on(StripIndex si);
 
-    rainbow::ColorHSV get_strip_color(uint8_t strip_index);
+    rainbow::ColorHSV get_strip_color(StripIndex si);
 
   private:
     ledstrip::LedStrip *m_strips; 

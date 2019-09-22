@@ -5,6 +5,7 @@ namespace lightmanager {
 using ledstrip::LedStrip;
 using ledstrip::UpDown;
 
+
 LightManager::LightManager(ledstrip::LedStrip strips[], uint8_t size) : m_strips(strips), m_size(size) {
   m_strip_state = new bool[m_size];
   for (auto i = 0; i < m_size; i++) {
@@ -19,20 +20,25 @@ void LightManager::initialize() {
   }
 }
 
-void LightManager::adjust_strip_hsv(uint8_t strip_index, UpDown h_dir, UpDown s_dir, UpDown v_dir) {
+void LightManager::adjust_strip_hsv(StripIndex si, UpDown h_dir, UpDown s_dir, UpDown v_dir) {
   if (!this->is_on()) {
     this->reset_state();
   }
-  m_strips[strip_index].adjust_hsv(h_dir, s_dir, v_dir);
-  m_strip_state[strip_index] = true;
+  // FIXME: We repease this non-trivial line 6 times. Consider refactoring
+  for (auto i = (si.is_all() ? 0 : si.index); i <= (si.is_all() ? (m_size - 1) : si.index); i++) {
+    m_strips[i].adjust_hsv(h_dir, s_dir, v_dir);
+    m_strip_state[i] = true;
+  }
 }
 
-void LightManager::set_strip_color(uint8_t strip_index, rainbow::ColorHSV &color){
+void LightManager::set_strip_color(StripIndex si, rainbow::ColorHSV &color){
   if (!this->is_on()) {
     this->reset_state();
   }
-  m_strips[strip_index].set_color(color);
-  m_strip_state[strip_index] = true;
+  for (auto i = (si.is_all() ? 0 : si.index); i <= (si.is_all() ? (m_size - 1) : si.index); i++) {
+    m_strips[i].set_color(color);
+    m_strip_state[i] = true;
+  }
 }
 
 void LightManager::on() {
@@ -57,25 +63,41 @@ bool LightManager::is_on() {
   return res;
 }
 
-void LightManager::strip_on(uint8_t strip_index) {
+void LightManager::strip_on(StripIndex si) {
   if (!this->is_on()) {
     this->reset_state();
   }
-  m_strips[strip_index].on();
-  m_strip_state[strip_index] = true;
+  for (auto i = (si.is_all() ? 0 : si.index); i <= (si.is_all() ? (m_size - 1) : si.index); i++) {
+    m_strips[i].on();
+    m_strip_state[i] = true;
+  }
 }
 
-void LightManager::strip_off(uint8_t strip_index) {
-  m_strips[strip_index].off();
-  m_strip_state[strip_index] = false;
+void LightManager::strip_off(StripIndex si) {
+  for (auto i = (si.is_all() ? 0 : si.index); i <= (si.is_all() ? (m_size - 1) : si.index); i++) {
+    m_strips[i].off();
+    m_strip_state[i] = false;
+  }
 }
 
-bool LightManager::is_strip_on(uint8_t strip_index) {
-  return m_strips[strip_index].is_on();
+bool LightManager::is_strip_on(StripIndex si) {
+  if (si.is_all()) {
+    return this->is_on();
+  } else {
+    return m_strips[si.index].is_on();
+  }
 }
 
-rainbow::ColorHSV LightManager::get_strip_color(uint8_t strip_index) {
-  return m_strips[strip_index].get_color();
+rainbow::ColorHSV LightManager::get_strip_color(StripIndex si) {
+  if (si.is_all()) {
+    // get_strip_color for all strips does not really makes sense logic-wise
+    // but can happen if a user wishes so.
+    // Returning first led's color as a sane default - in case when all strips are of the
+    // same color it actually makes sense.
+    return m_strips[0].get_color();
+  } else {
+    return m_strips[si.index].get_color();
+  }
 }
 
 void LightManager::reset_state() {

@@ -9,7 +9,7 @@ using ledstrip::UpDown;
 
 class LightManager {
   public:
-    LightManager(ledstrip::LedStrip strips[], uint8_t size) : m_strips(strips), m_size(size) {};
+    LightManager(ledstrip::LedStrip strips[], uint8_t size);
 
   public:
     void initialize();
@@ -18,8 +18,11 @@ class LightManager {
     void set_strip_color(uint8_t strip_index, rainbow::ColorHSV &color);
 
     // Turn all strips Off / On to their last saved color
+    // "all" means all those that were powered on before
     void on();
     void off();
+
+    bool is_on();
 
     // Turn a strip Off / On to their last saved color
     void strip_on(uint8_t strip_index);
@@ -32,6 +35,10 @@ class LightManager {
   private:
     ledstrip::LedStrip *m_strips; 
     uint8_t m_size;
+    bool *m_strip_state;
+    bool m_is_on = false;
+
+    void reset_state();
 };
 
 } // end of namespace

@@ -264,7 +264,7 @@ void handle_copy_paste_event(uint8_t room_index, keypad::KeyCode cp_keycode, rai
    switch (cp_keycode) {
     case keypad::CopyColor:
       if (!lightman.is_strip_on(room_index)) {
-        Serial.println("the strip is not on");
+        Serial.println("The strip is not on");
         return;
       }
       clip_color = lightman.get_strip_color(room_index);

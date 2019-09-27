@@ -55,11 +55,11 @@ void loop() {
     bool lights_on = false;
     rainbow::ColorHSV clip_color;
   } state;
-  
+
   keypad::KeyCode keycode = 0;
-  
+
   if (keycode=ir.recv()) {
-  
+
     Serial.print(String("Received key ") + String(keycode, HEX) + ". ");
 
     // Handlers should not mutate the state!
@@ -67,7 +67,7 @@ void loop() {
     if (keypad::isRoomOnOff(keycode)) {
       Serial.println("It's a room on/off key");
       state.lights_on = handle_room_onoff_event(state.current_room, keycode);
-    
+
     } else if (keypad::isColor(keycode)) {
       Serial.println("It's a color key");
       handle_color_event(state.current_room, keycode);
@@ -77,15 +77,15 @@ void loop() {
       Serial.println("It's a HSV key");
       handle_hsv_event(state.current_room, keycode);
       state.lights_on = true;
-    
+
     } else if (keypad::isRoomSelection(keycode)) {
       Serial.println("It's a Room selection key");
       state.current_room = get_room_index(keycode);
-    
+
     } else if (keypad::isCopyPaste(keycode)) {
       Serial.println("It's a copy/paste key");
       state.clip_color = handle_copy_paste_event(state.current_room, keycode, state.clip_color);
-    
+
     } else {
       switch (keycode) {
         case keypad::Power:
@@ -134,7 +134,7 @@ StripIndex get_room_index(const keypad::KeyCode room_keycode) {
 
 void handle_hsv_event(const StripIndex roomi, const keypad::KeyCode hsv_keycode) {
   UpDown h_dir = UpDown::None, s_dir = UpDown::None, v_dir = UpDown::None;
-  
+
   switch (hsv_keycode) {
     case keypad::HSVHueUp:
       h_dir = UpDown::Up;

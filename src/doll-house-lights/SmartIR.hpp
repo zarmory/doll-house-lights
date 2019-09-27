@@ -3,7 +3,7 @@
 #include <IRremote.h>
 
 class SmartIR {
-   
+
   public:
     SmartIR(byte pin, unsigned int long_press_delay_ms = 250);
   public:
@@ -11,7 +11,7 @@ class SmartIR {
     void initialize();
     // Return received data or 0 if there is none of it.
     unsigned long recv();
-    
+
   private:
     IRrecv *m_receiver;  // FIXME: Can we gate away without a pointer?
     decode_results m_results;

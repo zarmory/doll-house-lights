@@ -25,5 +25,5 @@ class ColorHSV {
       return (h && s && v);
     }
 };
-  
+
 } // end of namespace

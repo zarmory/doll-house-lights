@@ -26,7 +26,7 @@ class LightManager {
 
   public:
     void initialize();
-    
+
     void adjust_strip_hsv(const StripIndex si, const UpDown h_dir, const UpDown s_dir, const UpDown v_dir);
     void set_strip_color(const StripIndex si, const rainbow::ColorHSV &color);
 
@@ -46,7 +46,7 @@ class LightManager {
     rainbow::ColorHSV get_strip_color(const StripIndex si);
 
   private:
-    ledstrip::LedStrip *m_strips; 
+    ledstrip::LedStrip *m_strips;
     const uint8_t m_size;
     bool *m_strip_state;
     bool m_is_on = false;

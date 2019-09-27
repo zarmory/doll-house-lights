@@ -13,7 +13,7 @@ void SmartIR::initialize() {
 
 unsigned long SmartIR::recv() {
   static const unsigned long IR_REPEAT_LAST_VAL = 0xFFFFFFFF;
-  
+
   if (m_receiver->decode(&m_results)) {
     m_receiver->resume();
 
@@ -22,7 +22,7 @@ unsigned long SmartIR::recv() {
       m_press_ts = millis();
       return m_last_val;
     }
-      
+
     // delay repeating to handle key debounce
     if (static_cast<int32_t>(millis() - m_press_ts) > m_lpo) {
       return m_last_val;

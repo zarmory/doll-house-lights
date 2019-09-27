@@ -13,7 +13,7 @@ const auto HSV_MAX_S = 255;
 const auto HSV_MAX_V = 255;
 
 // Adjustment coefficients for H/S/V values
-const auto h_step = 500;
+const auto h_step = 200;
 const auto s_rel_step = 0.15;
 const auto s_min_step = 2;
 const auto v_rel_step = 0.2;

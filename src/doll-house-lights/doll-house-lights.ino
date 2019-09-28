@@ -12,6 +12,7 @@ using namespace dhl;
 using ledstrip::LedStrip;
 using ledstrip::UpDown;
 using lightmanager::StripIndex;
+using events::EventType;
 
 // FIXME: Use a single "dhl" namespace???
 //        Or may be just enclose evetying into dhl namespace?
@@ -51,10 +52,7 @@ lightmanager::LightManager lightman(led_strips, sizeof(led_strips)/sizeof(LedStr
 
 StripIndex get_room_index(const keypad::KeyCode room_keycode);
 void handle_hsv_event(const StripIndex si, const keypad::KeyCode hsv_keycode);
-bool handle_power_event(bool lights_on);
-void handle_color_event(const StripIndex si, const keypad::KeyCode color_keycode);
 bool handle_room_onoff_event(const StripIndex si, const keypad::KeyCode on_off_keycode, const bool lights_on);
-rainbow::ColorHSV handle_copy_paste_event(const StripIndex si, const keypad::KeyCode cp_keycode, const rainbow::ColorHSV &clip_color);
 
 void setup() {
   Serial.begin(115200);
@@ -81,10 +79,32 @@ void loop() {
 
     const events::Event* const event  = events::keycode_to_event(static_cast<keypad::Keys>(keycode));
 
-    if (event->get_type() == events::EventType::ColorSet) {
+    if (event->get_type() == EventType::ColorSet) {
       Serial.println("It's a color event");
       lightman.set_strip_color(state.current_room, *(static_cast<const events::ColorSetEvent* const>(event)->color));
       state.lights_on = true;
+
+    } else if (event->get_type() == EventType::Power) {
+      Serial.println("It's a power event");
+      lightman.is_on() ? lightman.off() : lightman.on();
+
+    } else if (event->get_type() == EventType::ColorCopy) {
+      Serial.println("It's a color copy event");
+      if (lightman.is_strip_on(state.current_room)) {
+        state.clip_color = lightman.get_strip_color(state.current_room);
+        Serial.println(String("Copied color: ") + state.clip_color.to_String());
+      } else {
+        Serial.println("The strip " + String(static_cast<int8_t>(state.current_room)) + " is off. Nothing to copy");
+      }
+
+    } else if (event->get_type() == EventType::ColorPaste) {
+      Serial.println("It's a color paste event");
+      if (state.clip_color) {
+        Serial.println(String("Pasting color: ") + state.clip_color.to_String());
+        lightman.set_strip_color(state.current_room, state.clip_color);
+      } else {
+        Serial.println("No Color to paste");
+      }
 
     } else if (keypad::isRoomOnOff(keycode)) {
       Serial.println("It's a room on/off key");
@@ -104,15 +124,7 @@ void loop() {
       state.clip_color = handle_copy_paste_event(state.current_room, keycode, state.clip_color);
 
     } else {
-      switch (keycode) {
-        case keypad::Power:
-          Serial.println("It's a power key");
-          state.lights_on = handle_power_event(state.lights_on);
-          break;
-        default:
-          Serial.println("Non relevant key");
-          break;
-      }
+      Serial.println("Non relevant key");
     }
 
     delete event;
@@ -187,13 +199,6 @@ void handle_hsv_event(const StripIndex roomi, const keypad::KeyCode hsv_keycode)
 
 }
 
-bool handle_power_event(bool lights_on) {
-  lights_on = !lights_on;
-  Serial.println(String("Lights ") + (lights_on ? "on!" : "off!"));
-  lights_on ? lightman.on() : lightman.off();
-  return lights_on;
-}
-
 bool handle_room_onoff_event(const StripIndex roomi, const keypad::KeyCode on_off_keycode) {
   if (on_off_keycode == keypad::RoomOn) {
     lightman.strip_on(roomi);
@@ -204,23 +209,4 @@ bool handle_room_onoff_event(const StripIndex roomi, const keypad::KeyCode on_of
   }
   Serial.println(String("Unsupported room on/off key") + String(on_off_keycode, HEX));
   return lightman.is_on();
-}
-
-rainbow::ColorHSV handle_copy_paste_event(const StripIndex roomi, const keypad::KeyCode cp_keycode, const rainbow::ColorHSV &clip_color) {
-   if (cp_keycode == keypad::CopyColor) {
-     if (!lightman.is_strip_on(roomi)) {
-       Serial.println("The strip " + String(static_cast<int8_t>(roomi)) + " is not on");
-       return clip_color;
-     }
-     Serial.println(String("Copied color: ") + clip_color.to_String());
-     return lightman.get_strip_color(roomi);
-
-   } else if (cp_keycode == keypad::PasteColor) {
-      lightman.set_strip_color(roomi, clip_color);
-      Serial.println(String("Pasted color: ") + clip_color.to_String());
-      return clip_color;
-   }
-
-  Serial.println(String("Unsupported copy/paste key") + String(cp_keycode, HEX));
-  return clip_color;
 }

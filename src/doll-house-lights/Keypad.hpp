@@ -7,8 +7,8 @@ typedef uint32_t KeyCode;
 enum Keys {
   Power = 0xFF02FD,
 
-  CopyColor  = 0xFFD02F,
-  PasteColor = 0xFFE01F,
+  ColorCopy  = 0xFFD02F,
+  ColorPaste = 0xFFE01F,
 
   RoomOn = 0xFF3AC5,
   RoomOff = 0XFFBA45,
@@ -62,8 +62,8 @@ enum Keys {
 
 bool isCopyPaste(KeyCode keycode) {
   switch (keycode) {
-    case CopyColor:
-    case PasteColor:
+    case ColorCopy:
+    case ColorPaste:
       return true;
       break;
     default:

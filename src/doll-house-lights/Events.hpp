@@ -49,19 +49,34 @@ const ColorMap color_map(_cmap, sizeof(_cmap) / sizeof(_cmap[0]));
 
 
 enum class EventType : uint8_t {
-    ColorSet,
-    HSVChange,
+    Power,
     ColorCopy,
     ColorPaste,
+    ColorSet,
+    HSVChange,
     RoomSelect,
     RoomOnOff,
-    Power,
     Unknown,
 };
 
 class Event {
     public:
         virtual const EventType get_type() const;
+};
+
+class PowerEvent : public Event {
+    public:
+        const EventType get_type() const { return EventType::Power; };
+};
+
+class ColorCopyEvent : public Event {
+    public:
+        const EventType get_type() const { return EventType::ColorCopy; };
+};
+
+class ColorPasteEvent : public Event {
+    public:
+        const EventType get_type() const { return EventType::ColorPaste; };
 };
 
 class ColorSetEvent : public Event {
@@ -72,20 +87,24 @@ class ColorSetEvent : public Event {
         const ColorHSV* const color;
 };
 
-class PowerEvent : public Event {
-    public:
-        const EventType get_type() const { return EventType::Power; };
-};
-
 class UnknownEvent : public Event {
     public:
         const EventType get_type() const { return EventType::Unknown; };
 };
 
-
 const Event* keycode_to_event(const Keys keycode) {
-    const ColorHSV *ev_color;
-    if ((ev_color=color_map.value(keycode)) != nullptr) {
+    const ColorHSV* const ev_color = color_map.value(keycode);
+
+    if (keycode == Keys::Power) {
+        return new PowerEvent();
+
+    } else if (keycode == Keys::ColorCopy) {
+        return new ColorCopyEvent();
+
+    } else if (keycode == Keys::ColorPaste) {
+        return new ColorPasteEvent();
+
+    } else if (ev_color != nullptr) {
         return new ColorSetEvent(ev_color);
 
     } else {

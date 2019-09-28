@@ -2,6 +2,11 @@
 
 namespace rainbow {
 
+// Max values for Hue, Saturation, and Value
+const auto max_hue = 65535;
+const auto max_sat = 255;
+const auto max_val = 255;
+
 class ColorHSV {
   public:
     ColorHSV(uint16_t h = 0 , uint8_t s = 0, uint8_t v = 0) : h(h), s(s), v(v) {}

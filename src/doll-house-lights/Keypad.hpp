@@ -84,36 +84,6 @@ bool isRoomOnOff(KeyCode keycode) {
   }
 }
 
-bool isColor(KeyCode keycode) {
-  switch (keycode) {
-    case Color11:
-    case Color12:
-    case Color13:
-    case Color14:
-    case Color21:
-    case Color22:
-    case Color23:
-    case Color24:
-    case Color31:
-    case Color32:
-    case Color33:
-    case Color34:
-    case Color41:
-    case Color42:
-    case Color43:
-    case Color44:
-    case Color51:
-    case Color52:
-    case Color53:
-    case Color54:
-      return true;
-      break;
-    default:
-      return false;
-      break;
-  }
-}
-
 bool isHSV(KeyCode keycode) {
   switch (keycode) {
     case HSVHueUp:
@@ -148,4 +118,4 @@ bool isRoomSelection(KeyCode keycode) {
   }
 }
 
-}  // end namespace
+}  // end of namespace

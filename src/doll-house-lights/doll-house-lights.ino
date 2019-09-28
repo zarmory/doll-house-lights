@@ -21,6 +21,8 @@ using lightmanager::StripIndex;
 //        Hence double namespace looks like the best of both worlds - per module isolation +
 //        another global namespace to guard against collisions with 3d party modules.
 
+// FIXME: Apply constexpr, const, noexcept where needed
+
 // ##### Config #####
 
 // Where IR receiver data pin in connected
@@ -68,9 +70,8 @@ void loop() {
     rainbow::ColorHSV clip_color;
   } state;
 
+  // FIXME: No need for keycode - use keypad::Keys
   keypad::KeyCode keycode = 0;
-
-  const rainbow::ColorHSV *ev_color;
 
   if (keycode=ir.recv()) {
 
@@ -78,9 +79,11 @@ void loop() {
 
     // Handlers should not mutate the state!
 
-    if ((ev_color=events::color_map.value(keycode)) != nullptr) {
+    const events::Event* const event  = events::keycode_to_event(static_cast<keypad::Keys>(keycode));
+
+    if (event->get_type() == events::EventType::ColorSet) {
       Serial.println("It's a color event");
-      lightman.set_strip_color(state.current_room, *ev_color);
+      lightman.set_strip_color(state.current_room, *(static_cast<const events::ColorSetEvent* const>(event)->color));
       state.lights_on = true;
 
     } else if (keypad::isRoomOnOff(keycode)) {
@@ -111,6 +114,8 @@ void loop() {
           break;
       }
     }
+
+    delete event;
   }
 }
 

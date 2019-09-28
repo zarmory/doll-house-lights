@@ -50,6 +50,9 @@ class LightManager {
     const uint8_t m_size;
     bool *m_strip_state;
     bool m_is_on = false;
+    StripIndex m_cur_strip;
+    rainbow::ColorHSV clip_color;
+    bool lights_on = false;
 
     void reset_state();
 };

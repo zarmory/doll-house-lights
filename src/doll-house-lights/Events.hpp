@@ -48,4 +48,50 @@ const ColorMap::Entry _cmap[] = {
 const ColorMap color_map(_cmap, sizeof(_cmap) / sizeof(_cmap[0]));
 
 
+enum class EventType : uint8_t {
+    ColorSet,
+    HSVChange,
+    ColorCopy,
+    ColorPaste,
+    RoomSelect,
+    RoomOnOff,
+    Power,
+    Unknown,
+};
+
+class Event {
+    public:
+        virtual const EventType get_type() const;
+};
+
+class ColorSetEvent : public Event {
+    public:
+        ColorSetEvent(const ColorHSV *color) : color(color) {}
+    public:
+        const EventType get_type() const { return EventType::ColorSet; };
+        const ColorHSV* const color;
+};
+
+class PowerEvent : public Event {
+    public:
+        const EventType get_type() const { return EventType::Power; };
+};
+
+class UnknownEvent : public Event {
+    public:
+        const EventType get_type() const { return EventType::Unknown; };
+};
+
+
+const Event* keycode_to_event(const Keys keycode) {
+    const ColorHSV *ev_color;
+    if ((ev_color=color_map.value(keycode)) != nullptr) {
+        return new ColorSetEvent(ev_color);
+
+    } else {
+        return new UnknownEvent();
+    }
+}
+
+
 }}  // end of namespace

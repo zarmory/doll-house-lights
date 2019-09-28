@@ -28,7 +28,9 @@ class LightManager {
     void initialize();
 
     void adjust_strip_hsv(const StripIndex si, const UpDown h_dir, const UpDown s_dir, const UpDown v_dir);
+
     void set_strip_color(const StripIndex si, const rainbow::ColorHSV &color);
+    rainbow::ColorHSV get_strip_color(const StripIndex si);
 
     // Turn all strips Off / On to their last saved color
     // "all" means all those that were powered on before
@@ -43,16 +45,15 @@ class LightManager {
 
     bool is_strip_on(const StripIndex si);
 
-    rainbow::ColorHSV get_strip_color(const StripIndex si);
+
+
+
 
   private:
     ledstrip::LedStrip *m_strips;
     const uint8_t m_size;
-    bool *m_strip_state;
+    bool *m_active_strips;
     bool m_is_on = false;
-    StripIndex m_cur_strip;
-    rainbow::ColorHSV clip_color;
-    bool lights_on = false;
 
     void reset_state();
 };

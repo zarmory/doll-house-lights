@@ -7,11 +7,19 @@
 
 #include "Events.hpp"
 
+using namespace dhl;
+
 using ledstrip::LedStrip;
 using ledstrip::UpDown;
 using lightmanager::StripIndex;
 
 // FIXME: Use a single "dhl" namespace???
+//        Or may be just enclose evetying into dhl namespace?
+//        I kind of prefer namespace-per-module approach - reminds me Python modules.
+//        Seriously though, I'm used to Python's "import foo", while in C++ it's more like
+//        "from foo import *" when you include something.
+//        Hence double namespace looks like the best of both worlds - per module isolation +
+//        another global namespace to guard against collisions with 3d party modules.
 
 // ##### Config #####
 
@@ -70,7 +78,7 @@ void loop() {
 
     // Handlers should not mutate the state!
 
-    if ((ev_color=dhl::color_map.value(keycode)) != nullptr) {
+    if ((ev_color=events::color_map.value(keycode)) != nullptr) {
       Serial.println("It's a color event");
       lightman.set_strip_color(state.current_room, *ev_color);
       state.lights_on = true;

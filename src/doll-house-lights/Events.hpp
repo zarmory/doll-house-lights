@@ -5,6 +5,7 @@
 #include "Rainbow.hpp"
 
 namespace dhl {
+namespace events {
 
 using rainbow::ColorHSV;
 using rainbow::max_hue;
@@ -47,4 +48,4 @@ const ColorMap::Entry _cmap[] = {
 const ColorMap color_map(_cmap, sizeof(_cmap) / sizeof(_cmap[0]));
 
 
-}  // end of namespace
+}}  // end of namespace

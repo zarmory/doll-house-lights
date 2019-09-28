@@ -2,6 +2,9 @@
 
 #include <IRremote.h>
 
+namespace dhl {
+namespace smart_ir {
+
 class SmartIR {
 
   public:
@@ -13,9 +16,11 @@ class SmartIR {
     unsigned long recv();
 
   private:
-    IRrecv *m_receiver;  // FIXME: Can we gate away without a pointer?
+    IRrecv *m_receiver;
     decode_results m_results;
     unsigned int m_lpo;
     unsigned long m_last_val;
     unsigned long m_press_ts;
 };
+
+}} // end of namespace

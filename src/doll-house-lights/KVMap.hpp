@@ -1,6 +1,7 @@
 #pragma once
 
 namespace dhl {
+namespace kvmap {
 
 template<typename Key, typename Value>
 class KVMap {
@@ -27,4 +28,4 @@ class KVMap {
         uint32_t m_size;
 };
 
-}  // end of namespace
+}}  // end of namespace

@@ -3,6 +3,7 @@
 #include "LedStrip.hpp"
 #include "Rainbow.hpp"
 
+namespace dhl {
 namespace lightmanager {
 
 using ledstrip::UpDown;
@@ -58,4 +59,4 @@ class LightManager {
     void reset_state();
 };
 
-} // end of namespace
+}} // end of namespace

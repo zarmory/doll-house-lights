@@ -4,7 +4,6 @@
 #include "LedStrip.hpp"
 #include "LightManager.hpp"
 #include "Rainbow.hpp"
-
 #include "Events.hpp"
 
 using namespace dhl;
@@ -13,14 +12,6 @@ using ledstrip::LedStrip;
 using ledstrip::UpDown;
 using lightmanager::StripIndex;
 using events::EventType;
-
-// FIXME: Use a single "dhl" namespace???
-//        Or may be just enclose evetying into dhl namespace?
-//        I kind of prefer namespace-per-module approach - reminds me Python modules.
-//        Seriously though, I'm used to Python's "import foo", while in C++ it's more like
-//        "from foo import *" when you include something.
-//        Hence double namespace looks like the best of both worlds - per module isolation +
-//        another global namespace to guard against collisions with 3d party modules.
 
 // FIXME: Apply constexpr, const, noexcept where needed
 
@@ -46,7 +37,7 @@ LedStrip led_strips[] = {
 
 
 // ##### Globals #####
-SmartIR ir(ir_pin);
+smart_ir::SmartIR ir(ir_pin);
 lightmanager::LightManager lightman(led_strips, sizeof(led_strips)/sizeof(LedStrip));
 
 
@@ -118,10 +109,6 @@ void loop() {
     } else if (keypad::isRoomSelection(keycode)) {
       Serial.println("It's a Room selection key");
       state.current_room = get_room_index(keycode);
-
-    } else if (keypad::isCopyPaste(keycode)) {
-      Serial.println("It's a copy/paste key");
-      state.clip_color = handle_copy_paste_event(state.current_room, keycode, state.clip_color);
 
     } else {
       Serial.println("Non relevant key");

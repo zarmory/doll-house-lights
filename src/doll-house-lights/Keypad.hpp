@@ -1,5 +1,6 @@
 #pragma once
 
+namespace dhl {
 namespace keypad {
 
 typedef uint32_t KeyCode;
@@ -60,19 +61,7 @@ enum Keys {
   RoomAll  = 0xFF609F,
 };
 
-bool isCopyPaste(KeyCode keycode) {
-  switch (keycode) {
-    case ColorCopy:
-    case ColorPaste:
-      return true;
-      break;
-    default:
-      return false;
-      break;
-  }
-}
-
-bool isRoomOnOff(KeyCode keycode) {
+inline bool isRoomOnOff(KeyCode keycode) {
   switch (keycode) {
     case RoomOn:
     case RoomOff:
@@ -84,7 +73,7 @@ bool isRoomOnOff(KeyCode keycode) {
   }
 }
 
-bool isHSV(KeyCode keycode) {
+inline bool isHSV(KeyCode keycode) {
   switch (keycode) {
     case HSVHueUp:
     case HSVHueDown:
@@ -100,7 +89,7 @@ bool isHSV(KeyCode keycode) {
   }
 }
 
-bool isRoomSelection(KeyCode keycode) {
+inline bool isRoomSelection(KeyCode keycode) {
   switch (keycode) {
     case RoomBL:
     case RoomBR:
@@ -118,4 +107,4 @@ bool isRoomSelection(KeyCode keycode) {
   }
 }
 
-}  // end of namespace
+}}  // end of namespace

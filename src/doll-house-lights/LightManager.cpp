@@ -1,5 +1,7 @@
 #include "LightManager.hpp"
 
+
+namespace dhl {
 namespace lightmanager {
 
 using ledstrip::LedStrip;
@@ -108,5 +110,4 @@ void LightManager::reset_state() {
   }
 }
 
-
-} // end of namespace
+}} // end of namespace

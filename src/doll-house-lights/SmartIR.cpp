@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include "SmartIR.hpp"
 
+namespace dhl {
+namespace smart_ir {
+
 SmartIR::SmartIR(byte pin, unsigned int long_press_delay_ms) {
   m_receiver = new IRrecv(pin);
   m_lpo = long_press_delay_ms;
@@ -31,3 +34,5 @@ unsigned long SmartIR::recv() {
   }
   return 0;
 }
+
+}}  // end of namespace

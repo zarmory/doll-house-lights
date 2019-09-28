@@ -5,6 +5,7 @@
 
 #include "Rainbow.hpp"
 
+namespace dhl {
 namespace ledstrip {
 
 // FIXME: Implementation to cpp file
@@ -24,7 +25,6 @@ enum class UpDown : int8_t {
   None = 0,
   Up = +1,
 };
-
 
 class LedStrip {
   public:
@@ -109,4 +109,4 @@ class LedStrip {
     }
 };
 
-} // end of namespace
+}} // end of namespace

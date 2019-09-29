@@ -62,7 +62,7 @@ void loop() {
 
     // Handlers should not mutate the state!
 
-    const events::Event* const event  = events::keycode_to_event(static_cast<keypad::Keys>(keycode));
+    auto event  = events::keycode_to_event(static_cast<keypad::Keys>(keycode));
 
     if (event->get_type() == EventType::ColorSet) {
       Serial.println("It's a color event");

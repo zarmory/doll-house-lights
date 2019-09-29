@@ -50,7 +50,11 @@ class LightManager {
     //
     // Template approach is taken from here:
     // https://stackoverflow.com/a/44639290/360390
-    // but I admit I don't fully understand it.
+    // As far as I understand, due to captured variables, each lambda is in fact
+    // a different function, hence the only way to generalize act() method is to use
+    // template - it's a bit sad, since actually a new version of act() will be produced
+    // for each new lambda hence it's equivalient to code duplication to a certain extent.
+    // Hoefully compiler will provide a good optimization for it.
     //
     // This function is used to apply a callback either to concrete room
     // or all rooms if passed room == Room::All.

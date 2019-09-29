@@ -35,6 +35,22 @@ class ColorHSV {
     }
 };
 
+enum class Shift {
+  Down = -1,
+  None = 0,
+  Up = +1,
+};
+
+class ShiftHSV {
+  public:
+    ShiftHSV(Shift h, Shift s, Shift v) : h(h), s(s), v(v) {}
+  public:
+    const Shift h;
+    const Shift s;
+    const Shift v;
+};
+
+
 using keypad::Keys;
 using ColorMap = kvmap::KVMap<Keys, ColorHSV>;
 
@@ -68,5 +84,18 @@ const ColorMap::Entry _cmap[] = {
     {Keys::Color14, ColorHSV(max_hue/6*5-5000, max_sat, 170)},  // Light violet
 };
 const ColorMap color_map(_cmap, sizeof(_cmap) / sizeof(_cmap[0]));
+
+
+using ShiftMap = kvmap::KVMap<Keys, ShiftHSV>;
+
+const ShiftMap::Entry _smap[] = {
+  {Keys::HSVHueUp, ShiftHSV(Shift::Up, Shift::None, Shift::None)},
+  {Keys::HSVHueDown, ShiftHSV(Shift::Down, Shift::None, Shift::None)},
+  {Keys::HSVSatUp, ShiftHSV(Shift::None, Shift::Up, Shift::None)},
+  {Keys::HSVSatDown, ShiftHSV(Shift::None, Shift::Down, Shift::None)},
+  {Keys::HSVValUp, ShiftHSV(Shift::None, Shift::None, Shift::Up)},
+  {Keys::HSVValDown, ShiftHSV(Shift::None, Shift::None, Shift::Down)},
+};
+const ShiftMap shift_map(_smap, sizeof(_smap) / sizeof(_smap[0]));
 
 }} // end of namespace

@@ -9,7 +9,6 @@
 using namespace dhl;
 
 using ledstrip::LedStrip;
-using ledstrip::UpDown;
 using lightmanager::StripIndex;
 using events::EventType;
 
@@ -75,6 +74,10 @@ void loop() {
       lightman.set_strip_color(state.current_room, *(static_cast<const events::ColorSetEvent* const>(event)->color));
       state.lights_on = true;
 
+    } else if (event->get_type() == EventType::HSVChange) {
+      Serial.println("It's a HSV event");
+      lightman.adjust_strip_hsv(state.current_room, *(static_cast<const events::HSVChangeEvent* const>(event)->shift));
+
     } else if (event->get_type() == EventType::Power) {
       Serial.println("It's a power event");
       lightman.is_on() ? lightman.off() : lightman.on();
@@ -100,11 +103,6 @@ void loop() {
     } else if (keypad::isRoomOnOff(keycode)) {
       Serial.println("It's a room on/off key");
       state.lights_on = handle_room_onoff_event(state.current_room, keycode);
-
-    } else if (keypad::isHSV(keycode)) {
-      Serial.println("It's a HSV key");
-      handle_hsv_event(state.current_room, keycode);
-      state.lights_on = true;
 
     } else if (keypad::isRoomSelection(keycode)) {
       Serial.println("It's a Room selection key");
@@ -148,42 +146,6 @@ StripIndex get_room_index(const keypad::KeyCode room_keycode) {
       return StripIndex(StripIndex::AllStrips);
       break;
   }
-}
-
-void handle_hsv_event(const StripIndex roomi, const keypad::KeyCode hsv_keycode) {
-  UpDown h_dir = UpDown::None, s_dir = UpDown::None, v_dir = UpDown::None;
-
-  switch (hsv_keycode) {
-    case keypad::HSVHueUp:
-      h_dir = UpDown::Up;
-      break;
-    case keypad::HSVHueDown:
-      h_dir = UpDown::Down;
-      break;
-    case keypad::HSVSatUp:
-      s_dir = UpDown::Up;
-      break;
-    case keypad::HSVSatDown:
-      s_dir = UpDown::Down;
-      break;
-    case keypad::HSVValUp:
-      v_dir = UpDown::Up;
-      break;
-    case keypad::HSVValDown:
-      v_dir = UpDown::Down;
-      break;
-    default:
-      Serial.print(String("Unsupported HSV key: ") + String(hsv_keycode, HEX));
-      return;
-  }
-
-  Serial.println(String("Adjusting HSV for room ") + static_cast<int8_t>(roomi) +
-                 " h_dir=" + static_cast<int8_t>(h_dir) +
-                 " s_dir=" + static_cast<int8_t>(s_dir) +
-                 " v_dir=" + static_cast<int8_t>(v_dir));
-
-  lightman.adjust_strip_hsv(roomi, h_dir, s_dir, v_dir);
-
 }
 
 bool handle_room_onoff_event(const StripIndex roomi, const keypad::KeyCode on_off_keycode) {

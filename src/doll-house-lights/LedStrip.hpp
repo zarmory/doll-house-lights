@@ -20,12 +20,6 @@ const auto s_min_step = 2;
 const auto v_rel_step = 0.2;
 const auto v_min_step = 2;
 
-enum class UpDown : int8_t {
-  Down = -1,
-  None = 0,
-  Up = +1,
-};
-
 class LedStrip {
   public:
     LedStrip(const uint8_t id, const uint8_t n_pixels, const uint8_t data_pin, const uint8_t clock_pin) : id(id) {
@@ -45,17 +39,17 @@ class LedStrip {
     /// @param h_diff Hue value delta
     /// @param s_up_down Saturation value - either +1 or -1
     /// @param v_up_down Value value - either +1 or -1
-    void adjust_hsv(const UpDown h_dir, const UpDown s_dir, const UpDown v_dir) {
+    void adjust_hsv(const rainbow::ShiftHSV &shift) {
       int8_t s_diff, v_diff;
 
-      m_c.h += static_cast<int8_t>(h_dir) * h_step; // Let it roll over around the HSV wheel
+      m_c.h += static_cast<int8_t>(shift.h) * h_step; // Let it roll over around the HSV wheel
 
       // Making Saturation to change slow around high values and fast around low values.
       // Similar approach with Value, but the other way around.
       // This improves user experience since perception wise, color changes are not uniform
       // accross the range.
-      s_diff = static_cast<int8_t>(s_dir) * max(s_rel_step * (HSV_MAX_S - m_c.s), s_min_step);
-      v_diff = static_cast<int8_t>(v_dir) * max(v_rel_step * m_c.v, v_min_step);
+      s_diff = static_cast<int8_t>(shift.s) * max(s_rel_step * (HSV_MAX_S - m_c.s), s_min_step);
+      v_diff = static_cast<int8_t>(shift.v) * max(v_rel_step * m_c.v, v_min_step);
 
       // Clamp S/V values to 0-255 range.
       // FIXME: Looks inefficient - probably some bit magic will do better?

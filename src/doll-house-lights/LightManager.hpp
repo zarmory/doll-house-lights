@@ -6,8 +6,6 @@
 namespace dhl {
 namespace lightmanager {
 
-using ledstrip::UpDown;
-
 class StripIndex {
   public:
     enum {
@@ -28,7 +26,7 @@ class LightManager {
   public:
     void initialize();
 
-    void adjust_strip_hsv(const StripIndex si, const UpDown h_dir, const UpDown s_dir, const UpDown v_dir);
+    void adjust_strip_hsv(const StripIndex si, const rainbow::ShiftHSV &shift);
 
     void set_strip_color(const StripIndex si, const rainbow::ColorHSV &color);
     rainbow::ColorHSV get_strip_color(const StripIndex si);

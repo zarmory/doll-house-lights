@@ -47,6 +47,14 @@ class ColorSetEvent : public Event {
         const rainbow::ColorHSV* const color;
 };
 
+class HSVChangeEvent : public Event {
+    public:
+        HSVChangeEvent(const rainbow::ShiftHSV *shift) : shift(shift) {}
+    public:
+        const EventType get_type() const { return EventType::HSVChange; };
+        const rainbow::ShiftHSV* const shift;
+};
+
 class UnknownEvent : public Event {
     public:
         const EventType get_type() const { return EventType::Unknown; };
@@ -54,6 +62,7 @@ class UnknownEvent : public Event {
 
 const Event* keycode_to_event(const Keys keycode) {
     const rainbow::ColorHSV* const ev_color = rainbow::color_map.value(keycode);
+    const rainbow::ShiftHSV* const ev_shift = rainbow::shift_map.value(keycode);
 
     if (keycode == Keys::Power) {
         return new PowerEvent();
@@ -66,6 +75,9 @@ const Event* keycode_to_event(const Keys keycode) {
 
     } else if (ev_color != nullptr) {
         return new ColorSetEvent(ev_color);
+
+    } else if (ev_shift != nullptr) {
+        return new HSVChangeEvent(ev_shift);
 
     } else {
         return new UnknownEvent();

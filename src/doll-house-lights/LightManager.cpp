@@ -5,8 +5,6 @@ namespace dhl {
 namespace lightmanager {
 
 using ledstrip::LedStrip;
-using ledstrip::UpDown;
-
 
 LightManager::LightManager(ledstrip::LedStrip strips[], const uint8_t size) : m_strips(strips), m_size(size) {
   m_active_strips = new bool[m_size];
@@ -22,13 +20,13 @@ void LightManager::initialize() {
   }
 }
 
-void LightManager::adjust_strip_hsv(const StripIndex si, const UpDown h_dir, const UpDown s_dir, const UpDown v_dir) {
+void LightManager::adjust_strip_hsv(const StripIndex si, const rainbow::ShiftHSV &shift) {
   if (!this->is_on()) {
     this->reset_state();
   }
   // FIXME: We repease this non-trivial line 6 times. Consider refactoring
   for (auto i = (si.is_all() ? 0 : si.index); i <= (si.is_all() ? (m_size - 1) : si.index); i++) {
-    m_strips[i].adjust_hsv(h_dir, s_dir, v_dir);
+    m_strips[i].adjust_hsv(shift);
     m_active_strips[i] = true;
   }
 }

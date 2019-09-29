@@ -4,21 +4,21 @@
 namespace dhl {
 namespace smart_ir {
 
-SmartIR::SmartIR(byte pin, unsigned int long_press_delay_ms) {
-  m_receiver = new IRrecv(pin);
-  m_lpo = long_press_delay_ms;
-}
+SmartIR::SmartIR(byte pin, unsigned int long_press_delay_ms) :
+  m_receiver(pin),
+  m_lpo(long_press_delay_ms)
+{}
 
 // This has to be run in setup stage, not in globals
 void SmartIR::initialize() {
-    m_receiver->enableIRIn();
+    m_receiver.enableIRIn();
 }
 
 unsigned long SmartIR::recv() {
   static const unsigned long IR_REPEAT_LAST_VAL = 0xFFFFFFFF;
 
-  if (m_receiver->decode(&m_results)) {
-    m_receiver->resume();
+  if (m_receiver.decode(&m_results)) {
+    m_receiver.resume();
 
     if (m_results.value != IR_REPEAT_LAST_VAL) {
       m_last_val = m_results.value;

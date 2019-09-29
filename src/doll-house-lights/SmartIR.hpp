@@ -16,7 +16,7 @@ class SmartIR {
     unsigned long recv();
 
   private:
-    IRrecv *m_receiver;
+    IRrecv m_receiver;
     decode_results m_results;
     unsigned int m_lpo;
     unsigned long m_last_val;

@@ -31,7 +31,7 @@ class ColorHSV {
     }
 
     operator bool() const {
-      return (h && s && v);
+      return (h || s || v);
     }
 };
 

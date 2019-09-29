@@ -41,6 +41,30 @@ class LightManager {
     bool m_is_on = false;
 
     void reset_state();
+
+    // I can't define the callback C-style like
+    //   void act(const Room r, void (*room_cb)(const Room r));
+    // since I want to use capturing lambdas as callback functions and
+    // they do not play together with C functions:
+    // https://stackoverflow.com/questions/55395717/passing-lambdas-as-callbacks-to-c-functions
+    //
+    // Template approach is taken from here:
+    // https://stackoverflow.com/a/44639290/360390
+    // but I admit I don't fully understand it.
+    //
+    // This function is used to apply a callback either to concrete room
+    // or all rooms if passed room == Room::All.
+    // This saves logic durplication for applyling similar operations on either
+    // particular or all rooms.
+    template <typename RoomCallback>
+    void act(const Room r, RoomCallback&& room_cb) {
+      const auto start = (r == Room::All) ? 0 : r;
+      const auto end = (r == Room::All) ? (m_size - 1) : r;
+      for (auto i = start; i <= end; i++) {
+        room_cb(static_cast<roomie::Room>(i));
+      }
+    }
+
 };
 
 }} // end of namespace

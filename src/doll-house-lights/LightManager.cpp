@@ -23,21 +23,20 @@ void LightManager::adjust_room_hsv(const Room r, const rainbow::ShiftHSV &shift)
   if (!this->is_on()) {
     this->reset_state();
   }
-  // FIXME: We repease this non-trivial line 6 times. Consider refactoring
-  for (auto i = ((r == Room::All) ? 0 : r); i <= ((r == Room::All) ? (m_size - 1) : r); i++) {
-    m_rooms[i].adjust_hsv(shift);
-    m_active_rooms[i] = true;
-  }
+  this->act(r, [&shift, this](const Room r) {
+    this->m_rooms[r].adjust_hsv(shift);
+    this->m_active_rooms[r] = true;
+  });
 }
 
 void LightManager::set_room_color(const Room r, const rainbow::ColorHSV &color){
   if (!this->is_on()) {
     this->reset_state();
   }
-  for (auto i = ((r == Room::All) ? 0 : r); i <= ((r == Room::All) ? (m_size - 1) : r); i++) {
-    m_rooms[i].set_color(color);
-    m_active_rooms[i] = true;
-  }
+  this->act(r, [&color, this](const Room r) {
+    this->m_rooms[r].set_color(color);
+    this->m_active_rooms[r] = true;
+  });
 }
 
 void LightManager::on() {
@@ -68,17 +67,17 @@ void LightManager::room_on(const Room r) {
   if (!this->is_on()) {
     this->reset_state();
   }
-  for (auto i = ((r == Room::All) ? 0 : r); i <= ((r == Room::All) ? (m_size - 1) : r); i++) {
-    m_rooms[i].on();
-    m_active_rooms[i] = true;
-  }
+  this->act(r, [this](const Room r) {
+    this->m_rooms[r].on();
+    this->m_active_rooms[r] = true;
+  });
 }
 
 void LightManager::room_off(const Room r) {
-  for (auto i = ((r == Room::All) ? 0 : r); i <= ((r == Room::All) ? (m_size - 1) : r); i++) {
-    m_rooms[i].off();
-    m_active_rooms[i] = false;
-  }
+  this->act(r, [this](const Room r) {
+    this->m_rooms[r].off();
+    this->m_active_rooms[r] = false;
+  });
 }
 
 bool LightManager::is_room_on(const Room r) {

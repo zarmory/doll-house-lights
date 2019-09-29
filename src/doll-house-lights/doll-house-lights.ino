@@ -9,7 +9,6 @@
 using namespace dhl;
 
 using ledstrip::LedStrip;
-using lightmanager::StripIndex;
 using events::EventType;
 
 // FIXME: Apply constexpr, const, noexcept where needed
@@ -40,10 +39,6 @@ smart_ir::SmartIR ir(ir_pin);
 lightmanager::LightManager lightman(led_strips, sizeof(led_strips)/sizeof(LedStrip));
 
 
-StripIndex get_room_index(const keypad::KeyCode room_keycode);
-void handle_hsv_event(const StripIndex si, const keypad::KeyCode hsv_keycode);
-bool handle_room_onoff_event(const StripIndex si, const keypad::KeyCode on_off_keycode, const bool lights_on);
-
 void setup() {
   Serial.begin(115200);
   ir.initialize();
@@ -53,13 +48,13 @@ void setup() {
 
 void loop() {
   static struct {
-    StripIndex current_room;
+    roomie::Room current_room;
     bool lights_on = false;
     rainbow::ColorHSV clip_color;
   } state;
 
   // FIXME: No need for keycode - use keypad::Keys
-  keypad::KeyCode keycode = 0;
+  unsigned long keycode = 0;
 
   if (keycode=ir.recv()) {
 
@@ -71,12 +66,12 @@ void loop() {
 
     if (event->get_type() == EventType::ColorSet) {
       Serial.println("It's a color event");
-      lightman.set_strip_color(state.current_room, *(static_cast<const events::ColorSetEvent* const>(event)->color));
+      lightman.set_room_color(state.current_room, *(static_cast<const events::ColorSetEvent* const>(event)->color));
       state.lights_on = true;
 
     } else if (event->get_type() == EventType::HSVChange) {
       Serial.println("It's a HSV event");
-      lightman.adjust_strip_hsv(state.current_room, *(static_cast<const events::HSVChangeEvent* const>(event)->shift));
+      lightman.adjust_room_hsv(state.current_room, *(static_cast<const events::HSVChangeEvent* const>(event)->shift));
 
     } else if (event->get_type() == EventType::Power) {
       Serial.println("It's a power event");
@@ -84,8 +79,8 @@ void loop() {
 
     } else if (event->get_type() == EventType::ColorCopy) {
       Serial.println("It's a color copy event");
-      if (lightman.is_strip_on(state.current_room)) {
-        state.clip_color = lightman.get_strip_color(state.current_room);
+      if (lightman.is_room_on(state.current_room)) {
+        state.clip_color = lightman.get_room_color(state.current_room);
         Serial.println(String("Copied color: ") + state.clip_color.to_String());
       } else {
         Serial.println("The strip " + String(static_cast<int8_t>(state.current_room)) + " is off. Nothing to copy");
@@ -95,18 +90,22 @@ void loop() {
       Serial.println("It's a color paste event");
       if (state.clip_color) {
         Serial.println(String("Pasting color: ") + state.clip_color.to_String());
-        lightman.set_strip_color(state.current_room, state.clip_color);
+        lightman.set_room_color(state.current_room, state.clip_color);
       } else {
         Serial.println("No Color to paste");
       }
 
-    } else if (keypad::isRoomOnOff(keycode)) {
-      Serial.println("It's a room on/off key");
-      state.lights_on = handle_room_onoff_event(state.current_room, keycode);
+    } else if (event->get_type() == EventType::RoomSelect) {
+      Serial.println("It's a room selection event");
+      state.current_room = *(static_cast<const events::RoomSelectEvent* const>(event)->room);
 
-    } else if (keypad::isRoomSelection(keycode)) {
-      Serial.println("It's a Room selection key");
-      state.current_room = get_room_index(keycode);
+    } else if (event->get_type() == EventType::RoomOn) {
+      Serial.println("It's a room on key");
+      lightman.room_on(state.current_room);
+
+    } else if (event->get_type() == EventType::RoomOff) {
+      Serial.println("It's a room off key");
+      lightman.room_off(state.current_room);
 
     } else {
       Serial.println("Non relevant key");
@@ -114,48 +113,4 @@ void loop() {
 
     delete event;
   }
-}
-
-StripIndex get_room_index(const keypad::KeyCode room_keycode) {
-  switch (room_keycode) {
-    case keypad::RoomBL:
-      return StripIndex(0);
-      break;
-    case keypad::RoomBR:
-      return StripIndex(1);
-      break;
-    case keypad::RoomML:
-      return StripIndex(2);
-      break;
-    case keypad::RoomMR:
-      return StripIndex(3);
-      break;
-    case keypad::RoomTL:
-      return StripIndex(4);
-      break;
-    case keypad::RoomTR:
-      return StripIndex(5);
-      break;
-    case keypad::RoomEave:
-      return StripIndex(6);
-      break;
-    case keypad::RoomAll:
-      return StripIndex(StripIndex::AllStrips);
-      break;
-    default:
-      return StripIndex(StripIndex::AllStrips);
-      break;
-  }
-}
-
-bool handle_room_onoff_event(const StripIndex roomi, const keypad::KeyCode on_off_keycode) {
-  if (on_off_keycode == keypad::RoomOn) {
-    lightman.strip_on(roomi);
-    return true;
-  } else if (on_off_keycode == keypad::RoomOff) {
-    lightman.strip_off(roomi);
-    return lightman.is_on();
-  }
-  Serial.println(String("Unsupported room on/off key") + String(on_off_keycode, HEX));
-  return lightman.is_on();
 }

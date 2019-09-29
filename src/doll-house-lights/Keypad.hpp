@@ -3,8 +3,6 @@
 namespace dhl {
 namespace keypad {
 
-typedef uint32_t KeyCode;
-
 enum Keys {
   Power = 0xFF02FD,
 
@@ -60,51 +58,5 @@ enum Keys {
   RoomEave = 0xFF708F,
   RoomAll  = 0xFF609F,
 };
-
-inline bool isRoomOnOff(KeyCode keycode) {
-  switch (keycode) {
-    case RoomOn:
-    case RoomOff:
-      return true;
-      break;
-    default:
-      return false;
-      break;
-  }
-}
-
-inline bool isHSV(KeyCode keycode) {
-  switch (keycode) {
-    case HSVHueUp:
-    case HSVHueDown:
-    case HSVSatUp:
-    case HSVSatDown:
-    case HSVValUp:
-    case HSVValDown:
-      return true;
-      break;
-    default:
-      return false;
-      break;
-  }
-}
-
-inline bool isRoomSelection(KeyCode keycode) {
-  switch (keycode) {
-    case RoomBL:
-    case RoomBR:
-    case RoomML:
-    case RoomMR:
-    case RoomTL:
-    case RoomTR:
-    case RoomEave:
-    case RoomAll:
-      return true;
-      break;
-    default:
-      return false;
-      break;
-  }
-}
 
 }}  // end of namespace

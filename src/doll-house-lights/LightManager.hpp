@@ -2,34 +2,24 @@
 
 #include "LedStrip.hpp"
 #include "Rainbow.hpp"
+#include "Roomie.hpp"
 
 namespace dhl {
 namespace lightmanager {
 
-class StripIndex {
-  public:
-    enum {
-      AllStrips = -1,
-    };
-
-    int8_t index;
-    StripIndex(int8_t i = 0) : index(i) {}
-    bool is_all() const { return (index == AllStrips); }
-
-    operator int8_t() const { return index; }
-};
+using roomie::Room;
 
 class LightManager {
   public:
-    LightManager(ledstrip::LedStrip strips[], uint8_t size);
+    LightManager(ledstrip::LedStrip rooms[], uint8_t size);
 
   public:
     void initialize();
 
-    void adjust_strip_hsv(const StripIndex si, const rainbow::ShiftHSV &shift);
+    void adjust_room_hsv(const Room r, const rainbow::ShiftHSV &shift);
 
-    void set_strip_color(const StripIndex si, const rainbow::ColorHSV &color);
-    rainbow::ColorHSV get_strip_color(const StripIndex si);
+    void set_room_color(const Room r,  const rainbow::ColorHSV &color);
+    rainbow::ColorHSV get_room_color(const Room r);
 
     // Turn all strips Off / On to their last saved color
     // "all" means all those that were powered on before
@@ -39,19 +29,15 @@ class LightManager {
     bool is_on();
 
     // Turn a strip Off / On to their last saved color
-    void strip_on(const StripIndex si);
-    void strip_off(const StripIndex si);
+    void room_on(const Room r);
+    void room_off(const Room r);
 
-    bool is_strip_on(const StripIndex si);
-
-
-
-
+    bool is_room_on(const Room r);
 
   private:
-    ledstrip::LedStrip *m_strips;
+    ledstrip::LedStrip *m_rooms;
     const uint8_t m_size;
-    bool *m_active_strips;
+    bool *m_active_rooms;
     bool m_is_on = false;
 
     void reset_state();

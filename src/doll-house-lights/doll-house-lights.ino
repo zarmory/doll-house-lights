@@ -1,4 +1,5 @@
 
+#include "Pins.hpp"
 #include "SmartIR.hpp"
 #include "Keypad.hpp"
 #include "LedStrip.hpp"
@@ -16,21 +17,21 @@ using events::EventType;
 // ##### Config #####
 
 // Where IR receiver data pin in connected
-const uint8_t ir_pin = 4;
+const uint8_t ir_pin = PIN_A0;
 
 // Clock pin is shared by all led strips
-const uint8_t clock_pin = 13;
+const uint8_t clock_pin = PIN_D9;
 
 LedStrip led_strips[] = {
   // id, # of pixels, data pin, clock pin
-  LedStrip(0, 4, 5, clock_pin),
-  LedStrip(1, 4, 6, clock_pin),
-  LedStrip(2, 4, 7, clock_pin),
-  LedStrip(3, 4, 8, clock_pin),
-  LedStrip(4, 4, 9, clock_pin),
-  LedStrip(5, 4, 10, clock_pin),
-  LedStrip(6, 40, 11, clock_pin),
-  // LedStrip(7, 4, 12, clock_pin), // spare channel
+  LedStrip(0, 4, PIN_D4, clock_pin),
+  LedStrip(1, 4, PIN_D5, clock_pin),
+  LedStrip(2, 4, PIN_D6, clock_pin),
+  LedStrip(3, 4, PIN_D7, clock_pin),
+  LedStrip(4, 4, PIN_A5, clock_pin),
+  LedStrip(5, 4, PIN_A4, clock_pin),
+  LedStrip(6, 40, PIN_A3, clock_pin),
+  // LedStrip(7, 4, PIN_A2, clock_pin), // spare channel
 };
 
 

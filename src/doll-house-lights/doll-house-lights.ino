@@ -20,18 +20,19 @@ using events::EventType;
 const uint8_t ir_pin = PIN_A0;
 
 // Clock pin is shared by all led strips
-const uint8_t clock_pin = PIN_D9;
+const uint8_t clock_pin1 = PIN_D9;
+const uint8_t clock_pin2 = PIN_D10;
 
 LedStrip led_strips[] = {
   // id, # of pixels, data pin, clock pin
-  LedStrip(0, 4, PIN_D4, clock_pin),
-  LedStrip(1, 4, PIN_D5, clock_pin),
-  LedStrip(2, 4, PIN_D6, clock_pin),
-  LedStrip(3, 4, PIN_D7, clock_pin),
-  LedStrip(4, 4, PIN_A5, clock_pin),
-  LedStrip(5, 4, PIN_A4, clock_pin),
-  LedStrip(6, 40, PIN_A3, clock_pin),
-  // LedStrip(7, 4, PIN_A2, clock_pin), // spare channel
+  LedStrip(0, 4, PIN_D4, clock_pin1),
+  LedStrip(1, 4, PIN_D5, clock_pin1),
+  LedStrip(2, 4, PIN_D6, clock_pin1),
+  LedStrip(3, 4, PIN_D7, clock_pin1),
+  LedStrip(4, 4, PIN_A5, clock_pin2),
+  LedStrip(5, 4, PIN_A4, clock_pin2),
+  LedStrip(6, 40, PIN_A3, clock_pin2),
+  // LedStrip(7, 4, PIN_A2, clock_pin2), // spare channel
 };
 
 
@@ -42,6 +43,7 @@ lightmanager::LightManager lightman(led_strips, sizeof(led_strips)/sizeof(LedStr
 
 void setup() {
   Serial.begin(115200);
+  Serial.println("Starting...");
   ir.initialize();
   lightman.initialize();
 }

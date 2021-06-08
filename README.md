@@ -8,3 +8,4 @@ It's all started with EEvblog [thread](https://www.eevblog.com/forum/beginners/m
 I tried hard to get away with ready-made solution,
 but eventually decided to go with full-blown custom-made setup.
 
+Here is a video it in action: https://www.youtube.com/watch?v=RzK0F3_di_U
